@@ -25,6 +25,12 @@ namespace WebPrikol.Models
                 .HasOne(p => p.Buyers)
                 .WithMany(b => b.Orders)
                 .HasForeignKey(p => p.BuyersForigenKey);
+            modelBuilder.Entity<Staff>()
+                .HasOne(p => p.Position)
+                .WithMany(b => b.Staffs)
+                .HasForeignKey(p => p.PositionForigenKey);
+            modelBuilder.Entity<>
         }
+
     }
 }

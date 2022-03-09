@@ -4,5 +4,6 @@
     {
         public Guid Id { get; set; }
         public string? PositionName { get; set; }
+        public List<Staff>? Staffs { get; set; }
     }
 }
