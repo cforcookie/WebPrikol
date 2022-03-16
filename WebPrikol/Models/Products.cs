@@ -6,8 +6,8 @@
         public string? ProductName { get; set; }
         public int? Price { get; set; }
         public Warehouse? WarehouseId { get; set; }
-        public Purchase? Purchases { get; set; }
-        public int? PurchaseForigenKey { get; set; }
+        public Purchase? Purchase { get; set; }
+        public int? ProductsForigenKey { get; set; }
         public List<Orders>? Orders { get; set; }
 
     }

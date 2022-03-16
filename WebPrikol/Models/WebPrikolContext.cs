@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
 
 namespace WebPrikol.Models
 {
@@ -39,7 +38,7 @@ namespace WebPrikol.Models
                 .HasForeignKey(p => p.ProductsForigenKey);
             modelBuilder.Entity<Purchase>()
                 .HasOne(p => p.Products)
-                .WithMany(b => b.Purchases)
+                .WithMany(b => b.Purchase)
                 .HasForeignKey(p => p.ProductsForigenKey);
 
 
