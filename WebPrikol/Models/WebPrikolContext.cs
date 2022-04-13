@@ -36,10 +36,18 @@ namespace WebPrikol.Models
                 .HasOne(p => p.Products)
                 .WithMany(b => b.Orders)
                 .HasForeignKey(p => p.ProductsForigenKey);
+            modelBuilder.Entity<Products>()
+                .HasOne(p => p.Purchase)
+                .WithMany(b => b.Products)
+                .HasForeignKey(p => p.PurchaseForigenKey);
+            modelBuilder.Entity<Warehouse>()
+                .HasOne(p => p.Purchase)
+                .WithMany(b => b.Warehouse)
+                .HasForeignKey(p => p.WarehouseForigenKey);
             modelBuilder.Entity<Purchase>()
-                .HasOne(p => p.Products)
+                .HasOne(p => p.Supplier)
                 .WithMany(b => b.Purchase)
-                .HasForeignKey(p => p.ProductsForigenKey);
+                .HasForeignKey(p => p.SupplierForigenKey);
 
 
         }
