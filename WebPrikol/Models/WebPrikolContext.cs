@@ -20,7 +20,9 @@ namespace WebPrikol.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<Order>()
+            
                 .HasOne(p => p.Buyers)
                 .WithMany(b => b.Orders)
                 .HasForeignKey(p => p.BuyersForigenKey);
