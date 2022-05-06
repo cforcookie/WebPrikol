@@ -2,6 +2,7 @@
 {
     public class Purchase
     {
+
         public Guid? PurchaseId { get; set; }
         public int? Quanity { get; set; }
         public int? Sum { get; set; }

@@ -2,10 +2,10 @@
 {
     public class Warehouse
     {
-        public Guid WarehouseId { get; set; }
+        public Guid Id { get; set; }
         public string? WarehouseName { get; set; }
         public string? WarehouseAddress { get; set; }
         public Purchase? Purchase { get; set; }
-        public int? WarehouseForigenKey { get; set; }
+        public Guid? WarehouseForigenKey { get; set; }
 }
 }
