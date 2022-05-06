@@ -6,6 +6,5 @@
         public string? FIO { get; set; }
 
         public int? PhoneNumber { get; set; }
-        public List<Order>? Orders { get; set; }
     }
 }

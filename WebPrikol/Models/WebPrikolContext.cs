@@ -22,31 +22,31 @@ namespace WebPrikol.Models
         {
             modelBuilder.Entity<Order>()
                 .HasOne(p => p.Buyers)
-                .WithMany(b => b.Orders)
+                .WithMany()
                 .HasForeignKey(p => p.BuyersForigenKey);
             modelBuilder.Entity<Staff>()
                 .HasOne(p => p.Positions)
-                .WithMany(b => b.Staffs)
+                .WithMany()
                 .HasForeignKey(p => p.PositionForigenKey);
             modelBuilder.Entity<Order>()
                 .HasOne(p => p.Staff)
-                .WithMany(b => b.Orders)
+                .WithMany()
                 .HasForeignKey(p => p.StaffsForigenKey);
             modelBuilder.Entity<Order>()
                 .HasOne(p => p.Products)
-                .WithMany(b => b.Orders)
+                .WithMany()
                 .HasForeignKey(p => p.ProductsForigenKey);
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Purchase)
-                .WithMany(b => b.Products)
+                .WithMany()
                 .HasForeignKey(p => p.PurchaseForigenKey);
             modelBuilder.Entity<Warehouse>()
                 .HasOne(p => p.Purchase)
-                .WithMany(b => b.Warehouse)
+                .WithMany()
                 .HasForeignKey(p => p.WarehouseForigenKey);
             modelBuilder.Entity<Purchase>()
                 .HasOne(p => p.Supplier)
-                .WithMany(b => b.Purchase)
+                .WithMany()
                 .HasForeignKey(p => p.SupplierForigenKey);
 
 
