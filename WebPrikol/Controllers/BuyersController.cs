@@ -78,6 +78,10 @@ namespace WebPrikol.Controllers
         [HttpPost]
         public async Task<ActionResult<Buyer>> PostBuyer(Buyer buyer)
         {
+            if(!ModelState.IsValid)
+            {
+                return ("Error - Сая пидорас"); 
+            }
             _context.Buyers.Add(buyer);
             await _context.SaveChangesAsync();
 
