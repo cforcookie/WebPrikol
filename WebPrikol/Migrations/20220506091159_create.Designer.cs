@@ -12,8 +12,8 @@ using WebPrikol.Models;
 namespace WebPrikol.Migrations
 {
     [DbContext(typeof(WebPrikolContext))]
-    [Migration("20220506080703_Create")]
-    partial class Create
+    [Migration("20220506091159_create")]
+    partial class create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -195,15 +195,15 @@ namespace WebPrikol.Migrations
             modelBuilder.Entity("WebPrikol.Models.Order", b =>
                 {
                     b.HasOne("WebPrikol.Models.Buyer", "Buyers")
-                        .WithMany("Orders")
+                        .WithMany()
                         .HasForeignKey("BuyersForigenKey");
 
                     b.HasOne("WebPrikol.Models.Product", "Products")
-                        .WithMany("Orders")
+                        .WithMany()
                         .HasForeignKey("ProductsForigenKey");
 
                     b.HasOne("WebPrikol.Models.Staff", "Staff")
-                        .WithMany("Orders")
+                        .WithMany()
                         .HasForeignKey("StaffsForigenKey");
 
                     b.Navigation("Buyers");
@@ -216,7 +216,7 @@ namespace WebPrikol.Migrations
             modelBuilder.Entity("WebPrikol.Models.Product", b =>
                 {
                     b.HasOne("WebPrikol.Models.Purchase", "Purchase")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("PurchaseForigenKey");
 
                     b.Navigation("Purchase");
@@ -225,7 +225,7 @@ namespace WebPrikol.Migrations
             modelBuilder.Entity("WebPrikol.Models.Purchase", b =>
                 {
                     b.HasOne("WebPrikol.Models.Supplier", "Supplier")
-                        .WithMany("Purchase")
+                        .WithMany()
                         .HasForeignKey("SupplierForigenKey");
 
                     b.Navigation("Supplier");
@@ -234,7 +234,7 @@ namespace WebPrikol.Migrations
             modelBuilder.Entity("WebPrikol.Models.Staff", b =>
                 {
                     b.HasOne("WebPrikol.Models.Position", "Positions")
-                        .WithMany("Staffs")
+                        .WithMany()
                         .HasForeignKey("PositionForigenKey");
 
                     b.Navigation("Positions");
@@ -243,41 +243,9 @@ namespace WebPrikol.Migrations
             modelBuilder.Entity("WebPrikol.Models.Warehouse", b =>
                 {
                     b.HasOne("WebPrikol.Models.Purchase", "Purchase")
-                        .WithMany("Warehouse")
+                        .WithMany()
                         .HasForeignKey("WarehouseForigenKey");
 
-                    b.Navigation("Purchase");
-                });
-
-            modelBuilder.Entity("WebPrikol.Models.Buyer", b =>
-                {
-                    b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("WebPrikol.Models.Position", b =>
-                {
-                    b.Navigation("Staffs");
-                });
-
-            modelBuilder.Entity("WebPrikol.Models.Product", b =>
-                {
-                    b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("WebPrikol.Models.Purchase", b =>
-                {
-                    b.Navigation("Products");
-
-                    b.Navigation("Warehouse");
-                });
-
-            modelBuilder.Entity("WebPrikol.Models.Staff", b =>
-                {
-                    b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("WebPrikol.Models.Supplier", b =>
-                {
                     b.Navigation("Purchase");
                 });
 #pragma warning restore 612, 618

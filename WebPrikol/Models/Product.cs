@@ -7,7 +7,6 @@
         public int? Price { get; set; }
         public Purchase? Purchase { get; set; }
         public Guid? PurchaseForigenKey { get; set; }
-        public List<Order>? Orders { get; set; }
 
     }
 }
