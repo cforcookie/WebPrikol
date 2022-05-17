@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebPrikol.Models;
+using WebPrikol.Validation;
 
 namespace WebPrikol.Controllers
 {
@@ -15,10 +16,12 @@ namespace WebPrikol.Controllers
     public class BuyersController : ControllerBase
     {
         private readonly WebPrikolContext _context;
+        private readonly PhoneNumberValidation _validation;
 
         public BuyersController(WebPrikolContext context)
         {
             _context = context;
+            _validation = new PhoneNumberValidation();
         }
 
         // GET: api/Buyers
@@ -78,9 +81,11 @@ namespace WebPrikol.Controllers
         [HttpPost]
         public async Task<ActionResult<Buyer>> PostBuyer(Buyer buyer)
         {
-            if(!ModelState.IsValid)
+            if (!_validation.IsValid(buyer.PhoneNumber))
             {
-                return ("Error - Сая пидорас"); 
+
+               // return ("Error - Саня пидорас"); 
+               return NotFound();
             }
             _context.Buyers.Add(buyer);
             await _context.SaveChangesAsync();

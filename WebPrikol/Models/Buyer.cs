@@ -5,6 +5,6 @@
         public Guid? Id { get; set; }
         public string? FIO { get; set; }
 
-        public int? PhoneNumber { get; set; }
+        public long? PhoneNumber { get; set; }
     }
 }
