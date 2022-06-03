@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebPrikol.Models;
+using WebPrikol.Validation;
 
 namespace WebPrikol.Controllers
 {
     public class UserDtoesController : Controller
     {
         private readonly Context _context;
+        private readonly PhoneNumberValidation _validation;
 
         public UserDtoesController(Context context)
         {
@@ -55,7 +57,7 @@ namespace WebPrikol.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserName,Password")] UserDto userDto)
+        public async Task<IActionResult> Create([Bind("Id,UserName,Password,PhoneNumber")] UserDto userDto)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +89,7 @@ namespace WebPrikol.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,UserName,Password")] UserDto userDto)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,UserName,Password,PhoneNumber")] UserDto userDto)
         {
             if (id != userDto.Id)
             {
@@ -133,6 +135,21 @@ namespace WebPrikol.Controllers
             }
 
             return View(userDto);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<UserDto>> PostBuyer(UserDto buyer)
+        {
+            if (!_validation.IsValid(buyer.PhoneNumber))
+            {
+
+                // return ("Error - Саня пидорас"); 
+                return NotFound();
+            }
+            _context.UserDto.Add(buyer);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetBuyer", new { id = buyer.Id }, buyer);
         }
 
         // POST: UserDtoes/Delete/5
