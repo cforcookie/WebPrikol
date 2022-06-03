@@ -9,87 +9,90 @@ using WebPrikol.Models;
 
 namespace WebPrikol.Controllers
 {
-    public class WarehousesController : Controller
+    public class UsersController : Controller
     {
         private readonly Context _context;
 
-        public WarehousesController(Context context)
+        public UsersController(Context context)
         {
             _context = context;
         }
 
-        // GET: Warehouses
+        // GET: Users
         public async Task<IActionResult> Index()
         {
-              return _context.Warehouses != null ? 
-                          View(await _context.Warehouses.ToListAsync()) :
-                          Problem("Entity set 'Context.Warehouses'  is null.");
+            var context = _context.Users.Include(u => u.UserDto);
+            return View(await context.ToListAsync());
         }
 
-        // GET: Warehouses/Details/5
+        // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Warehouses == null)
+            if (id == null || _context.Users == null)
             {
                 return NotFound();
             }
 
-            var warehouse = await _context.Warehouses
+            var user = await _context.Users
+                .Include(u => u.UserDto)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (warehouse == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(warehouse);
+            return View(user);
         }
 
-        // GET: Warehouses/Create
+        // GET: Users/Create
         public IActionResult Create()
         {
+            ViewData["UserDtoForeiginKey"] = new SelectList(_context.UserDto, "Id", "Id");
             return View();
         }
 
-        // POST: Warehouses/Create
+        // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductName,ProductPrice,ProductAmount")] Warehouse warehouse)
+        public async Task<IActionResult> Create([Bind("Id,UserName,PasswordHash,PasswordSalt,UserDtoForeiginKey")] User user)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(warehouse);
+                _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(warehouse);
+            ViewData["UserDtoForeiginKey"] = new SelectList(_context.UserDto, "Id", "Id", user.UserDtoForeiginKey);
+            return View(user);
         }
 
-        // GET: Warehouses/Edit/5
+        // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Warehouses == null)
+            if (id == null || _context.Users == null)
             {
                 return NotFound();
             }
 
-            var warehouse = await _context.Warehouses.FindAsync(id);
-            if (warehouse == null)
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            return View(warehouse);
+            ViewData["UserDtoForeiginKey"] = new SelectList(_context.UserDto, "Id", "Id", user.UserDtoForeiginKey);
+            return View(user);
         }
 
-        // POST: Warehouses/Edit/5
+        // POST: Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,ProductName,ProductPrice,ProductAmount")] Warehouse warehouse)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,UserName,PasswordHash,PasswordSalt,UserDtoForeiginKey")] User user)
         {
-            if (id != warehouse.Id)
+            if (id != user.Id)
             {
                 return NotFound();
             }
@@ -98,12 +101,12 @@ namespace WebPrikol.Controllers
             {
                 try
                 {
-                    _context.Update(warehouse);
+                    _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WarehouseExists(warehouse.Id))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -114,49 +117,51 @@ namespace WebPrikol.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(warehouse);
+            ViewData["UserDtoForeiginKey"] = new SelectList(_context.UserDto, "Id", "Id", user.UserDtoForeiginKey);
+            return View(user);
         }
 
-        // GET: Warehouses/Delete/5
+        // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Warehouses == null)
+            if (id == null || _context.Users == null)
             {
                 return NotFound();
             }
 
-            var warehouse = await _context.Warehouses
+            var user = await _context.Users
+                .Include(u => u.UserDto)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (warehouse == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(warehouse);
+            return View(user);
         }
 
-        // POST: Warehouses/Delete/5
+        // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            if (_context.Warehouses == null)
+            if (_context.Users == null)
             {
-                return Problem("Entity set 'Context.Warehouses'  is null.");
+                return Problem("Entity set 'Context.Users'  is null.");
             }
-            var warehouse = await _context.Warehouses.FindAsync(id);
-            if (warehouse != null)
+            var user = await _context.Users.FindAsync(id);
+            if (user != null)
             {
-                _context.Warehouses.Remove(warehouse);
+                _context.Users.Remove(user);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WarehouseExists(int? id)
+        private bool UserExists(int? id)
         {
-          return (_context.Warehouses?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

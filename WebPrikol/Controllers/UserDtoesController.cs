@@ -6,90 +6,92 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebPrikol.Models;
+using WebPrikol.Validation;
 
 namespace WebPrikol.Controllers
 {
-    public class WarehousesController : Controller
+    public class UserDtoesController : Controller
     {
         private readonly Context _context;
+        private readonly PhoneNumberValidation _validation;
 
-        public WarehousesController(Context context)
+        public UserDtoesController(Context context)
         {
             _context = context;
         }
 
-        // GET: Warehouses
+        // GET: UserDtoes
         public async Task<IActionResult> Index()
         {
-              return _context.Warehouses != null ? 
-                          View(await _context.Warehouses.ToListAsync()) :
-                          Problem("Entity set 'Context.Warehouses'  is null.");
+              return _context.UserDto != null ? 
+                          View(await _context.UserDto.ToListAsync()) :
+                          Problem("Entity set 'Context.UserDto'  is null.");
         }
 
-        // GET: Warehouses/Details/5
+        // GET: UserDtoes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Warehouses == null)
+            if (id == null || _context.UserDto == null)
             {
                 return NotFound();
             }
 
-            var warehouse = await _context.Warehouses
+            var userDto = await _context.UserDto
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (warehouse == null)
+            if (userDto == null)
             {
                 return NotFound();
             }
 
-            return View(warehouse);
+            return View(userDto);
         }
 
-        // GET: Warehouses/Create
+        // GET: UserDtoes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Warehouses/Create
+        // POST: UserDtoes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductName,ProductPrice,ProductAmount")] Warehouse warehouse)
+        public async Task<IActionResult> Create([Bind("Id,UserName,Password,PhoneNumber")] UserDto userDto)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(warehouse);
+                _context.Add(userDto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(warehouse);
+            return View(userDto);
         }
 
-        // GET: Warehouses/Edit/5
+        // GET: UserDtoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Warehouses == null)
+            if (id == null || _context.UserDto == null)
             {
                 return NotFound();
             }
 
-            var warehouse = await _context.Warehouses.FindAsync(id);
-            if (warehouse == null)
+            var userDto = await _context.UserDto.FindAsync(id);
+            if (userDto == null)
             {
                 return NotFound();
             }
-            return View(warehouse);
+            return View(userDto);
         }
 
-        // POST: Warehouses/Edit/5
+        // POST: UserDtoes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,ProductName,ProductPrice,ProductAmount")] Warehouse warehouse)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,UserName,Password,PhoneNumber")] UserDto userDto)
         {
-            if (id != warehouse.Id)
+            if (id != userDto.Id)
             {
                 return NotFound();
             }
@@ -98,12 +100,12 @@ namespace WebPrikol.Controllers
             {
                 try
                 {
-                    _context.Update(warehouse);
+                    _context.Update(userDto);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WarehouseExists(warehouse.Id))
+                    if (!UserDtoExists(userDto.Id))
                     {
                         return NotFound();
                     }
@@ -114,49 +116,64 @@ namespace WebPrikol.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(warehouse);
+            return View(userDto);
         }
 
-        // GET: Warehouses/Delete/5
+        // GET: UserDtoes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Warehouses == null)
+            if (id == null || _context.UserDto == null)
             {
                 return NotFound();
             }
 
-            var warehouse = await _context.Warehouses
+            var userDto = await _context.UserDto
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (warehouse == null)
+            if (userDto == null)
             {
                 return NotFound();
             }
 
-            return View(warehouse);
+            return View(userDto);
         }
 
-        // POST: Warehouses/Delete/5
+        [HttpPost]
+        public async Task<ActionResult<UserDto>> PostBuyer(UserDto buyer)
+        {
+            if (!_validation.IsValid(buyer.PhoneNumber))
+            {
+
+                // return ("Error - Саня пидорас"); 
+                return NotFound();
+            }
+            _context.UserDto.Add(buyer);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetBuyer", new { id = buyer.Id }, buyer);
+        }
+
+        // POST: UserDtoes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            if (_context.Warehouses == null)
+            if (_context.UserDto == null)
             {
-                return Problem("Entity set 'Context.Warehouses'  is null.");
+                return Problem("Entity set 'Context.UserDto'  is null.");
             }
-            var warehouse = await _context.Warehouses.FindAsync(id);
-            if (warehouse != null)
+            var userDto = await _context.UserDto.FindAsync(id);
+            if (userDto != null)
             {
-                _context.Warehouses.Remove(warehouse);
+                _context.UserDto.Remove(userDto);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WarehouseExists(int? id)
+        private bool UserDtoExists(int? id)
         {
-          return (_context.Warehouses?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.UserDto?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

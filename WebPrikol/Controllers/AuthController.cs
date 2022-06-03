@@ -25,7 +25,7 @@ namespace WebPrikol.Controllers
         {
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            user.Username = request.Username;
+            user.UserName = request.UserName;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
@@ -35,7 +35,7 @@ namespace WebPrikol.Controllers
         [HttpPost("Login")]
         public async Task<ActionResult<string>> Login(UserDto request)
         {
-            if (user.Username != request.Username)
+            if (user.UserName != request.UserName)
             {
                 return BadRequest("User not found.");
             }
@@ -53,7 +53,7 @@ namespace WebPrikol.Controllers
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.UserName)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(

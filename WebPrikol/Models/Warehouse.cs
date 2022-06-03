@@ -1,11 +1,14 @@
-﻿namespace WebPrikol.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebPrikol.Models
 {
     public class Warehouse
     {
-        public Guid Id { get; set; }
-        public string? WarehouseName { get; set; }
-        public string? WarehouseAddress { get; set; }
-        public Purchase? Purchase { get; set; }
-        public Guid? WarehouseForigenKey { get; set; }
-}
+        [Key]
+        public int? Id { get; set; }
+        public string? ProductName { get; set; }
+        public int? ProductPrice { get; set; }
+        public int? ProductAmount { get; set; }
+        public List<Product>? ProductsList { get; set; }
+    }
 }

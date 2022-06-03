@@ -9,90 +9,94 @@ using WebPrikol.Models;
 
 namespace WebPrikol.Controllers
 {
-    public class ProductsController : Controller
+    public class BasketsController : Controller
     {
         private readonly Context _context;
 
-        public ProductsController(Context context)
+        public BasketsController(Context context)
         {
             _context = context;
         }
 
-        // GET: Products
+        // GET: Baskets
         public async Task<IActionResult> Index()
         {
-            var context = _context.Products.Include(p => p.Warehouses);
+            var context = _context.Baskets.Include(b => b.Product).Include(b => b.User);
             return View(await context.ToListAsync());
         }
 
-        // GET: Products/Details/5
+        // GET: Baskets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Products == null)
+            if (id == null || _context.Baskets == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .Include(p => p.Warehouses)
+            var basket = await _context.Baskets
+                .Include(b => b.Product)
+                .Include(b => b.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            if (basket == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(basket);
         }
 
-        // GET: Products/Create
+        // GET: Baskets/Create
         public IActionResult Create()
         {
-            ViewData["WarehouseForeiginKey"] = new SelectList(_context.Warehouses, "Id", "Id");
+            ViewData["ProductsForeiginKey"] = new SelectList(_context.Products, "Id", "Id");
+            ViewData["UserForeiginKey"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
-        // POST: Products/Create
+        // POST: Baskets/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductName,ProductDescription,ProductPictureURL,WarehouseForeiginKey")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,ProductsForeiginKey,UserForeiginKey,PriceSumming")] Basket basket)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
+                _context.Add(basket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["WarehouseForeiginKey"] = new SelectList(_context.Warehouses, "Id", "Id", product.WarehouseForeiginKey);
-            return View(product);
+            ViewData["ProductsForeiginKey"] = new SelectList(_context.Products, "Id", "Id", basket.ProductsForeiginKey);
+            ViewData["UserForeiginKey"] = new SelectList(_context.Users, "Id", "Id", basket.UserForeiginKey);
+            return View(basket);
         }
 
-        // GET: Products/Edit/5
+        // GET: Baskets/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Products == null)
+            if (id == null || _context.Baskets == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
+            var basket = await _context.Baskets.FindAsync(id);
+            if (basket == null)
             {
                 return NotFound();
             }
-            ViewData["WarehouseForeiginKey"] = new SelectList(_context.Warehouses, "Id", "Id", product.WarehouseForeiginKey);
-            return View(product);
+            ViewData["ProductsForeiginKey"] = new SelectList(_context.Products, "Id", "Id", basket.ProductsForeiginKey);
+            ViewData["UserForeiginKey"] = new SelectList(_context.Users, "Id", "Id", basket.UserForeiginKey);
+            return View(basket);
         }
 
-        // POST: Products/Edit/5
+        // POST: Baskets/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,ProductName,ProductDescription,ProductPictureURL,WarehouseForeiginKey")] Product product)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,ProductsForeiginKey,UserForeiginKey,PriceSumming")] Basket basket)
         {
-            if (id != product.Id)
+            if (id != basket.Id)
             {
                 return NotFound();
             }
@@ -101,12 +105,12 @@ namespace WebPrikol.Controllers
             {
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(basket);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.Id))
+                    if (!BasketExists(basket.Id))
                     {
                         return NotFound();
                     }
@@ -117,51 +121,53 @@ namespace WebPrikol.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["WarehouseForeiginKey"] = new SelectList(_context.Warehouses, "Id", "Id", product.WarehouseForeiginKey);
-            return View(product);
+            ViewData["ProductsForeiginKey"] = new SelectList(_context.Products, "Id", "Id", basket.ProductsForeiginKey);
+            ViewData["UserForeiginKey"] = new SelectList(_context.Users, "Id", "Id", basket.UserForeiginKey);
+            return View(basket);
         }
 
-        // GET: Products/Delete/5
+        // GET: Baskets/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Products == null)
+            if (id == null || _context.Baskets == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .Include(p => p.Warehouses)
+            var basket = await _context.Baskets
+                .Include(b => b.Product)
+                .Include(b => b.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            if (basket == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(basket);
         }
 
-        // POST: Products/Delete/5
+        // POST: Baskets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            if (_context.Products == null)
+            if (_context.Baskets == null)
             {
-                return Problem("Entity set 'Context.Products'  is null.");
+                return Problem("Entity set 'Context.Baskets'  is null.");
             }
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
+            var basket = await _context.Baskets.FindAsync(id);
+            if (basket != null)
             {
-                _context.Products.Remove(product);
+                _context.Baskets.Remove(basket);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int? id)
+        private bool BasketExists(int? id)
         {
-          return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Baskets?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
